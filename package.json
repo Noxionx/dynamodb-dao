@@ -1,0 +1,96 @@
+{
+  "name": "dynamodb-dao",
+  "version": "1.0.0",
+  "description": "Data Access Object for AWS DynamoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require babel-register",
+    "build:dao": "babel src/dao.js --out-file dist/dao.js",
+    "build:table": "babel src/table.js --out-file dist/table.js",
+    "build": "npm run build:dao && npm run build:table"
+  },
+  "keywords": [
+    "dynamodb"
+  ],
+  "author": "nox35400@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
+    "mocha": "^4.0.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.169.0",
+    "q": "^1.5.1"
+  },
+  "babel": {
+    "presets": [
+      "env",
+      "stage-2"
+    ]
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es6": true,
+      "mocha": true
+    },
+    "extends": "airbnb",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "experimentalObjectRestSpread": true
+      }
+    },
+    "rules": {
+      "indent": [
+        "error",
+        2
+      ],
+      "space-before-function-paren": [
+        2,
+        "always"
+      ],
+      "new-cap": [
+        2,
+        {
+          "newIsCap": true,
+          "capIsNewExceptions": [
+            "DropTarget",
+            "DropSource",
+            "DragDropContext"
+          ]
+        }
+      ],
+      "no-console": 0,
+      "spaced-comment": [
+        "error",
+        "always",
+        {
+          "block": {
+            "exceptions": [
+              "*"
+            ]
+          }
+        }
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
+  }
+}
