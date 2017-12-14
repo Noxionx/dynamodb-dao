@@ -1,13 +1,15 @@
 {
   "name": "dynamodb-dao",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Data Access Object for AWS DynamoDB",
+  "repository": "https://github.com/Noxionx/dynamodb-dao",
   "main": "index.js",
   "scripts": {
     "test": "mocha --require babel-register",
     "build:dao": "babel src/dao.js --out-file dist/dao.js",
     "build:table": "babel src/table.js --out-file dist/table.js",
-    "build": "npm run build:dao && npm run build:table"
+    "build": "npm run build:dao && npm run build:table",
+    "prepare": "npm run build"
   },
   "keywords": [
     "dynamodb"

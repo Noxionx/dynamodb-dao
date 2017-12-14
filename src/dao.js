@@ -1,7 +1,6 @@
 import q from 'q';
 import aws from 'aws-sdk';
-
-// import Table from './table';
+import Table from './table';
 
 const DEFAULT_CONFIG = {
   region: 'eu-central-1',
@@ -10,11 +9,28 @@ const DEFAULT_CONFIG = {
   secretAccessKey: 'secret',
 };
 
+function loadTables (db) {
+  const deferred = q.defer();
+
+  db.listTables({}, (err, res) => {
+    if (err) {
+      deferred.reject(err);
+    } else if (res.TableNames) {
+      deferred.resolve(res.TableNames);
+    } else {
+      deferred.reject(new TypeError('Error with tables fetching'));
+    }
+  });
+
+  return deferred.promise;
+}
+
 export default class DAO {
   constructor (config = DEFAULT_CONFIG) {
     this.config = config;
     aws.config.update(this.config);
     this.db = new aws.DynamoDB();
+    this.tablesPromise = loadTables(this.db);
   }
 
 
@@ -81,13 +97,13 @@ export default class DAO {
 
     keys.forEach(parseKey);
 
-    this.db.createTable(params, (err, res) => {
-      if (err) {
-        deferred.reject(err);
+    this.tablesPromise.then((tables) => {
+      if (tables.indexOf(name) > -1) {
+        deferred.reject(new TypeError(`The table ${name} aready exists`));
       } else {
-        deferred.resolve(res);
+        this.db.createTable(params, deferred.makeNodeResolver());
       }
-    });
+    }).catch(deferred.reject);
 
     return deferred.promise;
   }
@@ -106,14 +122,19 @@ export default class DAO {
       TableName: name,
     };
 
-    this.db.deleteTable(params, (err, res) => {
-      if (err) {
-        deferred.reject(err);
+    this.tablesPromise.then((tables) => {
+      if (tables.indexOf(name) !== -1) {
+        deferred.reject(new TypeError(`The table ${name} doesn't exists`));
       } else {
-        deferred.resolve(res);
+        this.db.deleteTable(params, deferred.makeNodeResolver());
       }
-    });
+    }).catch(deferred.reject);
 
     return deferred.promise;
+  }
+
+  /* eslint-disable */
+  table (name) {
+    return new Table(name);
   }
 }
