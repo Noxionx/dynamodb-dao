@@ -1,6 +1,6 @@
 {
   "name": "dynamodb-dao",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Data Access Object for AWS DynamoDB",
   "repository": "https://github.com/Noxionx/dynamodb-dao",
   "main": "index.js",
